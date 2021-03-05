@@ -1,0 +1,14 @@
+-
+  name: "Wordpress configuration with ansible"
+  hosts: local
+  tasks:
+    - name: Install packages
+      become: true 
+      apt:
+         name: 
+                - nginx
+                - mysql-server
+                - php-fpm
+                - php-mysql
+         state: present
+
