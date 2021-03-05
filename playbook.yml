@@ -1,7 +1,7 @@
 -
   name: "Wordpress configuration with ansible"
   hosts: local
-  tasks:
+  tasks: 
     - name: Install packages
       become: true 
       apt:
@@ -11,5 +11,6 @@
                 - mariadb-client
                 - php-fpm
                 - php-mysql
+         update_cache: true
          state: present
 
