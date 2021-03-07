@@ -3,7 +3,7 @@
   hosts: local
   tasks: 
     - name: Install packages
-      become: true 
+      become: true
       apt:
          name: 
                 - nginx
@@ -13,4 +13,34 @@
                 - php-mysql
          update_cache: true
          state: present
+    - name: "start mariadb"
+      action: 'service name=mariadb state=started'
+
+    - name: 'set root password'
+      mysql_user:
+       name: root
+       password: 'test1234'
+       priv: '*.*:ALL,GRANT'
+       login_unix_socket: /var/run/mysqld/mysqld.sock
+      become: true
+
+    - name: 'create mariadb db'
+      mysql_db:
+        name: 'wordpress_db'
+        state: present
+        login_user: root
+        login_password: test1234
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+      become: true
+
+    - name: 'create mariadb user'
+      become: yes
+      mysql_user:
+        name: 'wordpress_user'
+        password: 'wordpress_pass'
+        priv: '*.*:ALL'
+        login_user: root
+        login_password: test1234
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
 
