@@ -37,10 +37,59 @@
       become: yes
       mysql_user:
         name: 'wordpress_user'
-        password: 'wordpress_pass'
+        password: 'my_password'
         priv: '*.*:ALL'
         login_user: root
         login_password: test1234
         login_unix_socket: /var/run/mysqld/mysqld.sock
 
 
+    - name: 'send site config file'
+      copy:
+        src:  template/wordpress.conf
+        dest: /etc/nginx/sites-available/wordpress.conf
+      become: yes
+    - name: 'Some changes on file'
+      replace: 
+        path: /etc/nginx/sites-available/wordpress.conf
+        regexp: '127.0.0.1'
+        replace: "{{ ansible_host }}"
+      become: yes
+    - name: 'remove default config'
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      become: yes
+    - name: 'create simlink'
+      become: yes
+      file:
+        src: /etc/nginx/sites-available/wordpress.conf
+        dest: /etc/nginx/sites-enabled/wordpress.conf
+        state: link
+    - name: 'restart nginx service and enable it on startup'
+      become: yes
+      service: 
+        name: nginx
+        state: restarted
+        enabled: true
+    - name: 'Wordpress file check_path'
+      stat: path=/var/www/wordpress
+      register: check_path
+    - name: 'Download wordpress files'
+      get_url:
+        url: https://wordpress.org/latest.tar.gz 
+        dest: /tmp/wordpress.tar.gz
+      when: not check_path.stat.exists
+    - name: 'Extract files to /var/www'
+      unarchive:
+        src: /tmp/wordpress.tar.gz
+        dest: /var/www
+        remote_src: yes
+      become: yes
+      when: not check_path.stat.exists
+    - name: 'Give wordpress /var/www/wordpress file www-data owner'
+      file:
+        path: /var/www/wordpress
+        owner: www-data
+        group: www-data
+      become: yes
