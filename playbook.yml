@@ -1,47 +1,48 @@
--
-  name: "Wordpress configuration with ansible"
+---
+
+- name: "Wordpress configuration with ansible"
   hosts: local
   tasks: 
     - name: Install packages
       become: true
       apt:
-         name: 
-                - nginx
-                - mariadb-server
-                - mariadb-client
-                - php-fpm
-                - php-mysql
-         update_cache: true
-         state: present
+        name: 
+          - nginx
+          - mariadb-server
+          - mariadb-client
+          - php-fpm
+          - php-mysql
+            update_cache: true
+        state: present
     - name: "start mariadb"
       action: 'service name=mariadb state=started'
 
     - name: 'set root password'
       mysql_user:
-       name: root
-       password: 'test1234'
-       priv: '*.*:ALL,GRANT'
-       login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: '{{ mysql_root_user }}'
+        password: ''{{ mysql_root_password }}'
+        priv: '*.*:ALL,GRANT'
+        login_unix_socket: '{{ mysql_socket }}'
       become: true
 
     - name: 'create mariadb db'
       mysql_db:
-        name: 'wordpress_db'
+        name: '{{ db_name }}'
         state: present
-        login_user: root
+        login_user: '{{ mysql_root_user }}'
         login_password: test1234
-        login_unix_socket: /var/run/mysqld/mysqld.sock
+        login_unix_socket: '{{ mysql_socket }}'
       become: true
 
     - name: 'create mariadb user'
-      become: yes
+      become: true
       mysql_user:
-        name: 'wordpress_user'
-        password: 'my_password'
+        name: '{{ db_user }}'
+        password: '{{ db_user_pass }}'
         priv: '*.*:ALL'
-        login_user: root
+        login_user: '{{ mysql_root_user }}'
         login_password: test1234
-        login_unix_socket: /var/run/mysqld/mysqld.sock
+        login_unix_socket: '{{ mysql_socket }}'
 
 
     - name: 'send site config file'
