@@ -1,2 +1,6 @@
 ---
 # vars file for ansible-role-nginx
+ansible_sudo_pass: test1234
+wordpress_config_path: template/wordpress.conf
+nginx_sites_available: /etc/nginx/sites-available/wordpress.conf
+nginx_sites_enabled: /etc/nginx/sites-enabled/wordpress.conf
