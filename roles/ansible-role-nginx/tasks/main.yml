@@ -1,6 +1,6 @@
 ---
 
-- name: Install nginx and other
+- name: 'Install nginx and other'
   apt:
     name: '{{ item }}'
     update_cache: yes
