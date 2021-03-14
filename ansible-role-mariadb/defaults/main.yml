@@ -1,3 +1,0 @@
----
-# defaults file for ansible-role-mariadb
-mysql_socket: /var/run/mysqld/mysqld.sock

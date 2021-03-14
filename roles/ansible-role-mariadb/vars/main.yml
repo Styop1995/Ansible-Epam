@@ -1,0 +1,4 @@
+---
+# vars file for ansible-role-mariadb
+mysql_root_user: root
+mysql_root_password: test1234
