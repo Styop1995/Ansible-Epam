@@ -1,8 +1,0 @@
----
-# vars file for ansible-role-mariadb
-ansible_sudo_pass: test1234
-mysql_root_user: root
-mysql_root_password: test1234
-db_name: wordpress_db
-db_username: wordpress_user
-db_user_pass: my_password

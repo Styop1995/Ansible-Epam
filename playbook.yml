@@ -1,6 +1,5 @@
-- hosts: ubuntu
+- hosts: all
   roles:
-    - mariadb
-    - nginx
-    - wordpress
-    
+    - ansible-role-mariadb
+    - ansible-role-nginx
+    - ansible-role-wordpress
