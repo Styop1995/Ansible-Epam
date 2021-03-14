@@ -1,2 +1,23 @@
 ---
 # tasks file for ansible-role-wordpress
+ - name: 'Check if wordpress file exist'
+    stat: path=/var/www/wordpress
+    register: check_path
+  - name: 'Download wordpress files'
+    get_url:
+      url: "{{ wordpress_remote_site_path }}" 
+      dest: "{{ wordpress_local_site_path }}"
+    when: not check_path.stat.exists
+  - name: 'Extract '
+    unarchive:
+      src: "{{ wordpress_local_site_path }}"
+      dest: "{{ nginx_www }}"
+      remote_src: yes
+    become: true
+    when: not check_path.stat.exists
+  - name: 'Change ownership '
+    file:
+      path: /var/www/wordpress
+      owner: www-data
+      group: www-data
+    become: true
