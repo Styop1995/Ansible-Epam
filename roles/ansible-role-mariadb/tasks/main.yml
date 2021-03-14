@@ -11,17 +11,17 @@
     - python3-pip
     - mariadb-client
   become: true
-- name: Start Mariadb
+- name: 'Start Mariadb'
   become: true
   service: 
-    name: mariadb 
+    name: 'mariadb'
     state: started
     enabled: true
 - name: 'Install pymysql module'
   become: true
   pip:
-    name: pymysql
-- name: update mysql root password for all root accounts
+    name: 'pymysql'
+- name: 'update mysql root password for all root accounts'
   become: true
   mysql_user: 
     name: '{{ mysql_root_user }}' 
